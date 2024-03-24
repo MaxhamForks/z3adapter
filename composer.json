@@ -1,19 +1,26 @@
 {
-    "name": "zhylon/z3filesystem",
-    "authors": [
-        {
-            "name": "TobyMaxham",
-            "email": "git@maxham.de"
-        }
-    ],
-    "require": {
-        "php": "^8.2",
-        "guzzlehttp/guzzle": "^7.0",
-        "laravel/framework": "^11.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "Zhylon\\Z3Filesystem\\": "src/"
-        }
+  "name": "zhylon/z3filesystem",
+  "authors": [
+    {
+      "name": "TobyMaxham",
+      "email": "git@maxham.de"
     }
+  ],
+  "require": {
+    "php": "^8.2",
+    "guzzlehttp/guzzle": "^7.0",
+    "laravel/framework": "^11.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Zhylon\\Z3Filesystem\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Zhylon\\Z3Filesystem\\Z3Provider"
+      ]
+    }
+  }
 }
