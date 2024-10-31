@@ -3,6 +3,7 @@
 namespace Zhylon\Z3Filesystem;
 
 use GuzzleHttp\Psr7\Stream;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use League\Flysystem\FileAttributes;
 use Illuminate\Encryption\Encrypter;
@@ -18,6 +19,7 @@ class Z3Client
         throw_if(!isset($this->config['key']), new Z3Exception('Z3 key is required'));
         throw_if(!isset($this->config['secret']), new Z3Exception('Z3 secret is required'));
         throw_if(!isset($this->config['bucket']), new Z3Exception('Z3 bucket is required'));
+        throw_if(!isset($this->config['endpoint']), new Z3Exception('Z3 endpoint is required'));
         throw_if(!isset($this->config['region']), new Z3Exception('Z3 region is required'));
         throw_if(!isset($this->config['encryption_key']), new Z3Exception('Z3 encryption_key is required'));
         throw_if(!isset($this->config['cipher']), new Z3Exception('Z3 cipher is required'));
@@ -27,10 +29,12 @@ class Z3Client
 
     public function client()
     {
+        $version = Arr::get('version', $this->config, 'v4');
         return Http::withToken($this->config['secret'])
-            ->baseUrl(vsprintf('https://%s.%s/api/v4/%s', [
+            ->baseUrl(vsprintf('https://%s.%s/api/%s/%s', [
                     $this->config['region'],
                     $this->config['endpoint'],
+                    $version,
                     $this->config['bucket'],
                 ])
             )
@@ -96,8 +100,8 @@ class Z3Client
             Carbon::parse($response->header('LastModified'))->timestamp,
             explode(';', $response->header('Content-Type'))[0],
             [
-                'ETag' => $response->header('ETag'),
-                'StorageClass'  => $response->header('StorageClass'),
+                'ETag'         => $response->header('ETag'),
+                'StorageClass' => $response->header('StorageClass'),
             ]
         );
     }
